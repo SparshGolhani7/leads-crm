@@ -99,9 +99,10 @@ export default function LeadsListPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="p-4 sm:p-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-lg sm:text-xl font-semibold">Leads</h1>
-            <p className="text-xs sm:text-sm text-gray-500">Manage and track your potential customers</p>
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <a href="/" className="hover:underline">Home</a>
+            <span className="text-gray-300">/</span>
+            <span className="text-gray-800 font-medium">List View</span>
           </div>
           <div className="flex items-center gap-2">
             <a href="/leads/add">
@@ -151,6 +152,8 @@ export default function LeadsListPage() {
       </Card>
 
       <Card>
+        <div className="overflow-x-auto sm:overflow-visible -mx-2 sm:mx-0">
+        <div className="sm:min-w-0 min-w-[900px] sm:min-w-full inline-block align-middle">
         <Table>
           <thead>
             <tr>
@@ -203,12 +206,14 @@ export default function LeadsListPage() {
             {loading && (
               <tr>
                 <Td colSpan={8}>
-                  <div className="flex items-center gap-2 text-gray-600"><Spinner /> Loading...</div>
+                  <div className="flex items-center justify-center gap-2 text-gray-600 py-3"><Spinner /> Loading...</div>
                 </Td>
               </tr>
             )}
           </tbody>
         </Table>
+        </div>
+        </div>
         <div className="mt-3">
           <Button variant="danger" onClick={()=>showDeleteConfirmation()} disabled={!selected.length || archiving} className="cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">Archive Selected</Button>
         </div>

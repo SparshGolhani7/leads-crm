@@ -15,6 +15,11 @@ const validationSchema = Yup.object({
     .matches(/^\d{10}$/, "Phone number must be exactly 10 digits")
     .required("Phone number is required"),
   lead_type: Yup.string().required("Lead type is required"),
+  company: Yup.string().when("lead_type", {
+    is: (val: string) => val === "commercial",
+    then: (schema) => schema.required("Company is required when lead type is commercial"),
+    otherwise: (schema) => schema.optional(),
+  }),
   status: Yup.string().required("Status is required"),
   contact_method: Yup.string().required("Preferred contact method is required"),
   priority: Yup.string().required("Priority is required"),
@@ -41,6 +46,7 @@ export default function AddLeadPage() {
     email: "",
     phone: "",
     lead_type: "",
+    company: "",
     source: "",
     status: "",
     contact_method: "",
@@ -60,11 +66,16 @@ export default function AddLeadPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="p-4 sm:p-6 space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-            <h1 className="text-lg sm:text-xl font-semibold">Add Lead</h1>
+      <div className="p-3 sm:p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-base sm:text-xl font-semibold">Add Lead</h1>
             <p className="text-xs sm:text-sm text-gray-500">Create a new lead record</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <a href="/leads">
+              <Button className="text-xs sm:text-sm">← Back to list</Button>
+            </a>
           </div>
       </div>
       <Card>
@@ -80,24 +91,25 @@ export default function AddLeadPage() {
         >
           {({ values, setFieldValue }) => (
             <Form className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <h2 className="text-sm sm:text-base font-semibold text-gray-800">Basic Information</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             <div>
-              <label className="text-sm">First Name <span className="text-red-600 font-bold">*</span></label>
+              <label className="text-sm text-gray-800">First Name <span className="text-red-600 font-bold">*</span></label>
               <Field as={Input} name="first_name" placeholder="Enter first name" />
               <ErrorMessage name="first_name" component="div" className="text-red-500 text-xs mt-1" />
             </div>
             <div>
-              <label className="text-sm">Surname <span className="text-red-600 font-bold">*</span></label>
+              <label className="text-sm text-gray-800">Surname <span className="text-red-600 font-bold">*</span></label>
               <Field as={Input} name="surname" placeholder="Enter surname" />
               <ErrorMessage name="surname" component="div" className="text-red-500 text-xs mt-1" />
             </div>
             <div>
-              <label className="text-sm">Email Address <span className="text-red-600 font-bold">*</span></label>
+              <label className="text-sm text-gray-800">Email Address <span className="text-red-600 font-bold">*</span></label>
               <Field as={Input} type="email" name="email" placeholder="email@example.com" />
               <ErrorMessage name="email" component="div" className="text-red-500 text-xs mt-1" />
             </div>
             <div>
-              <label className="text-sm">Phone Number <span className="text-red-600 font-bold">*</span></label>
+              <label className="text-sm text-gray-800">Phone Number <span className="text-red-600 font-bold">*</span></label>
               <Field name="phone">
                 {({ field, form }: any) => (
                   <Input
@@ -118,7 +130,7 @@ export default function AddLeadPage() {
               <ErrorMessage name="phone" component="div" className="text-red-500 text-xs mt-1" />
             </div>
             <div>
-              <label className="text-sm">Lead Type <span className="text-red-600 font-bold">*</span></label>
+              <label className="text-sm text-gray-800">Lead Type <span className="text-red-600 font-bold">*</span></label>
               <Field as={Select} name="lead_type">
                 <option value="">Select type</option>
                 <option value="commercial">Commercial</option>
@@ -126,8 +138,15 @@ export default function AddLeadPage() {
               </Field>
               <ErrorMessage name="lead_type" component="div" className="text-red-500 text-xs mt-1" />
             </div>
+            {values.lead_type === "commercial" && (
+              <div>
+                <label className="text-sm text-gray-800">Company <span className="text-red-600 font-bold">*</span></label>
+                <Field as={Input} name="company" placeholder="Enter company name" />
+                <ErrorMessage name="company" component="div" className="text-red-500 text-xs mt-1" />
+              </div>
+            )}
             <div>
-              <label className="text-sm">Lead Source</label>
+              <label className="text-sm text-gray-800">Lead Source</label>
               <Field as={Select} name="source">
                 <option value="">Select source</option>
                 <option value="website_enquiry">Website Enquiry</option>
@@ -141,7 +160,7 @@ export default function AddLeadPage() {
               </Field>
             </div>
             <div className="md:col-span-2">
-              <label className="text-sm">Status <span className="text-red-600 font-bold">*</span></label>
+              <label className="text-sm text-gray-800">Status <span className="text-red-600 font-bold">*</span></label>
               <Field as={Select} name="status">
                 <option value="">Select status</option>
                 <option value="new">New</option>
@@ -154,7 +173,7 @@ export default function AddLeadPage() {
               <ErrorMessage name="status" component="div" className="text-red-500 text-xs mt-1" />
             </div>
             <div className="md:col-span-2">
-              <label className="text-sm">Preferred Contact Method <span className="text-red-600 font-bold">*</span></label>
+              <label className="text-sm text-gray-800">Preferred Contact Method <span className="text-red-600 font-bold">*</span></label>
               <Field as={Select} name="contact_method">
                 <option value="">Select</option>
                 <option value="phone_call">Phone</option>
@@ -166,7 +185,7 @@ export default function AddLeadPage() {
               <ErrorMessage name="contact_method" component="div" className="text-red-500 text-xs mt-1" />
             </div>
             <div className="md:col-span-2">
-              <label className="text-sm">Priority <span className="text-red-600 font-bold">*</span></label>
+              <label className="text-sm text-gray-800">Priority <span className="text-red-600 font-bold">*</span></label>
               <Field as={Select} name="priority">
                 <option value="">Select priority</option>
                 <option value="low">Low</option>
@@ -177,7 +196,7 @@ export default function AddLeadPage() {
               <ErrorMessage name="priority" component="div" className="text-red-500 text-xs mt-1" />
             </div>
             <div className="md:col-span-2">
-              <label className="text-sm">Follow-up Date <span className="text-red-600 font-bold">*</span></label>
+              <label className="text-sm text-gray-800">Follow-up Date <span className="text-red-600 font-bold">*</span></label>
               <div className="relative">
                 <Field as={Input} type="date" name="follow_up_date" className="pr-10" />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -191,7 +210,7 @@ export default function AddLeadPage() {
           </div>
 
           {/* Address Section */}
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold flex items-center gap-2">
                 <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,7 +224,7 @@ export default function AddLeadPage() {
               </Button>
             </div>
             
-            <div className="bg-gray-50 border rounded-lg p-4 space-y-4">
+            <div className="bg-gray-50 border rounded-lg p-3 sm:p-4 space-y-3 sm:space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -218,7 +237,7 @@ export default function AddLeadPage() {
               
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm">Address Type <span className="text-red-600 font-bold">*</span></label>
+                  <label className="text-sm text-gray-800">Address Type <span className="text-red-600 font-bold">*</span></label>
                   <Field as={Select} name="leadAddresses.0.address_type">
                     <option value="">Select address type</option>
                     <option value="primary">Primary</option>
@@ -228,34 +247,36 @@ export default function AddLeadPage() {
                   <ErrorMessage name="leadAddresses.0.address_type" component="div" className="text-red-500 text-xs mt-1" />
                 </div>
                 <div>
-                  <label className="text-sm">Postcode</label>
+                  <label className="text-sm text-gray-800">Postcode</label>
                   <div className="flex gap-2">
                     <Field as={Input} name="leadAddresses.0.postal_code" placeholder="E.G. SW1A 1AA" />
                     <Button type="button" className="text-xs px-2 py-1">Lookup</Button>
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm">Address Line 1</label>
+                  <label className="text-sm text-gray-800">Address Line 1</label>
                   <Field as={Input} name="leadAddresses.0.address_line1" placeholder="e.g. 123 High Street" />
                 </div>
                 <div>
-                  <label className="text-sm">Address Line 2</label>
+                  <label className="text-sm text-gray-800">Address Line 2</label>
                   <Field as={Input} name="leadAddresses.0.address_line2" placeholder="Apartment, suite, etc." />
                 </div>
-                <div>
-                  <label className="text-sm">City</label>
-                  <Field as={Input} name="leadAddresses.0.city" placeholder="e.g. London" />
-            </div>
-            <div>
-                  <label className="text-sm">Country</label>
-                  <Field as={Input} name="leadAddresses.0.country" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                  <div>
+                    <label className="text-sm text-gray-800">City</label>
+                    <Field as={Input} name="leadAddresses.0.city" placeholder="e.g. London" />
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-800">Country</label>
+                    <Field as={Input} name="leadAddresses.0.country" />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
           <div>
-            <label className="text-sm">Notes</label>
+            <label className="text-sm text-gray-800">Notes</label>
             <Field as="textarea" name="notes" className="w-full border rounded-md px-3 py-2 text-sm" rows={4} placeholder="Add any additional notes or details about this lead." />
           </div>
 

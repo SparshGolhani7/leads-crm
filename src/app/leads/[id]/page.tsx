@@ -11,6 +11,7 @@ export default function EditLeadPage() {
   const id = Number(params?.id);
   const { fetchById, current, update, loading, error, clearError } = useLeadsStore();
   const [form, setForm] = useState<Lead | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchById(id);
@@ -27,6 +28,11 @@ export default function EditLeadPage() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!form) return;
+    setFormError(null);
+    if ((form.lead_type === 'commercial') && (!form.company || form.company.trim() === '')) {
+      setFormError('Company is required when lead type is commercial');
+      return;
+    }
     await update(id, form);
     router.push("/leads");
   }
@@ -47,16 +53,21 @@ export default function EditLeadPage() {
             <h1 className="text-lg sm:text-xl font-semibold">Edit Lead</h1>
             <p className="text-xs sm:text-sm text-gray-500">Update lead details</p>
           </div>
+          <div className="flex items-center gap-2">
+            <a href="/leads">
+              <Button className="text-xs sm:text-sm">← Back to list</Button>
+            </a>
+          </div>
         </div>
       <Card>
-        {error && (
+        {(error || formError) && (
           <div className="mb-3">
-            <Alert>
-              {error.message}
-            </Alert>
+            {formError && <Alert>{formError}</Alert>}
+            {error && <Alert>{error.message}</Alert>}
           </div>
         )}
         <form onSubmit={onSubmit} className="space-y-4">
+          <h2 className="text-sm sm:text-base font-semibold text-gray-800">Basic Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm">First Name <span className="text-red-600 font-bold">*</span></label>
@@ -92,6 +103,12 @@ export default function EditLeadPage() {
                 <option value="residential">Residential</option>
               </Select>
             </div>
+            {form.lead_type === 'commercial' && (
+              <div>
+                <label className="text-sm">Company <span className="text-red-600 font-bold">*</span></label>
+                <Input value={form.company || ""} onChange={(e) => set("company", e.target.value)} required />
+              </div>
+            )}
             <div>
               <label className="text-sm">Lead Source <span className="text-red-600 font-bold">*</span></label>
               <Select value={form.source || ""} onChange={(e) => set("source", e.target.value)} required>
