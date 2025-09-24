@@ -197,14 +197,7 @@ export default function AddLeadPage() {
             </div>
             <div className="md:col-span-2">
               <label className="text-sm text-gray-800">Follow-up Date <span className="text-red-600 font-bold">*</span></label>
-              <div className="relative">
-                <Field as={Input} type="date" name="follow_up_date" className="pr-10" />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-              </div>
+              <Field as={Input} type="date" name="follow_up_date" />
               <ErrorMessage name="follow_up_date" component="div" className="text-red-500 text-xs mt-1" />
             </div>
           </div>
