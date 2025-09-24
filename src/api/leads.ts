@@ -46,25 +46,3 @@ export async function deleteLeads(leadIds: Array<number>) {
   return result;
 }
 
-export async function addLeadNote(leadId: number, note: string) {
-  return apiFetch(`${BASE}/${leadId}/notes`, {
-    method: "POST",
-    body: JSON.stringify({ note }),
-  });
-}
-
-export async function convertLead(leadId: number) {
-  return apiFetch(`${BASE}/${leadId}/convert`);
-}
-
-export async function convertLeadWithCheck(
-  leadId: number,
-  payload: { customer_id?: number; force_new_customer?: boolean } = {}
-) {
-  return apiFetch(`${BASE}/${leadId}/convert-with-check`, {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
-}
-
-

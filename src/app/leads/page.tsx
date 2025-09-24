@@ -100,8 +100,8 @@ export default function LeadsListPage() {
       <div className="p-4 sm:p-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <a href="/" className="hover:underline">Home</a>
-            <span className="text-gray-300">/</span>
+            <a href="/" className="text-gray-800 font-medium">Home</a>
+            <span className="text-gray-800 font-medium">/</span>
             <span className="text-gray-800 font-medium">List View</span>
           </div>
           <div className="flex items-center gap-2">
