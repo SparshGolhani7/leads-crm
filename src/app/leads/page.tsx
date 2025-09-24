@@ -152,8 +152,8 @@ export default function LeadsListPage() {
       </Card>
 
       <Card>
-        <div className="overflow-x-auto sm:overflow-visible -mx-2 sm:mx-0">
-        <div className="sm:min-w-0 min-w-[900px] sm:min-w-full inline-block align-middle">
+        <div className="overflow-x-auto w-full">
+        <div className="min-w-[800px] sm:min-w-full w-full inline-block align-middle">
         <Table>
           <thead>
             <tr>
